@@ -62,7 +62,7 @@ def doDaThang(file):
 
     return min(map(manhattanDist, intersections))
 
-doDaThang('03/input.txt')
+doDaThang('03/input-test2.txt')
 
 # (x,y) -> (x+dx, y+dy)
 

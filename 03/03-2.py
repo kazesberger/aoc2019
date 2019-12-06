@@ -23,10 +23,10 @@ def getHorAndVertLineData(wireMoves):
     for x,y in wireMoves:
         if x == 0:
             fromTo = (pos[1],pos[1]+y)
-            moves.append(['v',pos[0], min(fromTo), max(fromTo)])
+            moves.append(['D' if pos[1] < pos[1]+y else 'U', pos[0], min(fromTo), max(fromTo)])
         if y == 0:
             fromTo = (pos[0],pos[0]+x)
-            moves.append(['h',pos[1], min(fromTo), max(fromTo)])
+            moves.append(['R' if pos[1] < pos[1]+x else 'L', pos[1], min(fromTo), max(fromTo)])
         pos[1] += y
         pos[0] += x
     return moves
@@ -34,20 +34,26 @@ def getHorAndVertLineData(wireMoves):
 def getIntersections(wireLineData1, wireLineData2):
 
     intersections = []
+    dist1 = 0
+    dist2 = 0
 
     for orientation1, fixedKoord1, lo1, hi1 in wireLineData1:
         for orientation2, fixedKoord2, lo2, hi2 in wireLineData2:
-            if orientation2 ==orientation1:
+            if orientation2 in ['R', 'L'] and orientation1 in ['R', 'L'] or orientation2 in ['D', 'U'] and orientation1 in ['D', 'U']:
+                dist2 += (hi2-lo2)
                 continue
             if isBetween(fixedKoord1, lo2, hi2) and isBetween(fixedKoord2, lo1, hi1):
-                if orientation1 == 'v':
-                    intersections.append((fixedKoord1, fixedKoord2))
+                if orientation2 in ['U', 'L']:
+                    intersections.append((fixedKoord1, fixedKoord2, hi2 - fixedKoord1 + dist1 + dist2 + fixedKoord2 - lo1))
                 else:
-                    intersections.append((fixedKoord2, fixedKoord1))
-            
-            
+                    intersections.append((fixedKoord2, fixedKoord1, fixedKoord1 - lo2 + dist1 + dist2 + fixedKoord1 - lo2))
+        dist2 = 0
+        dist1 += (hi1-lo1)
 
     return intersections
+
+# for foo, a, b, c in [['R', 0, 0, 98], ['D', 98, 0, 47]]:
+#     print(f'{foo,a,b,c}')
 
 def doDaThang(file):
 
@@ -59,9 +65,9 @@ def doDaThang(file):
     intersections = getIntersections(horVertLineData1, horVertLineData2)
     print(intersections)
 
-    manhattanDist = lambda tupel: tupel[0] + tupel[1]
+    # manhattanDist = lambda tupel: tupel[0] + tupel[1]
 
-    return min(map(manhattanDist, intersections))
+    # return min(map(manhattanDist, intersections))
 
 doDaThang('03/input-test3.txt')
 
