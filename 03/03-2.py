@@ -19,59 +19,51 @@ def getMoveData(file):
 def getHorAndVertLineData(wireMoves):
 
     pos = [0,0]
-    hMoves = []
-    vMoves = []
+    moves = []
     for x,y in wireMoves:
         if x == 0:
             fromTo = (pos[1],pos[1]+y)
-            vMoves.append([pos[0], min(fromTo), max(fromTo)])
+            moves.append(['v',pos[0], min(fromTo), max(fromTo)])
         if y == 0:
             fromTo = (pos[0],pos[0]+x)
-            hMoves.append([pos[1], min(fromTo), max(fromTo)])
+            moves.append(['h',pos[1], min(fromTo), max(fromTo)])
         pos[1] += y
         pos[0] += x
-    return (hMoves, vMoves)
+    return moves
 
-def getIntersections(hLines, vLines):
-
-    intersections = []
-    for y, lox, hix in hLines:
-        for x, loy, hiy in vLines:
-            if isBetween(y, loy, hiy) and isBetween(x, lox, hix):
-                intersections.append((x,y))
-    return intersections
-
-def getIntersectionsWithP2Dist(hLines, vLines):
+def getIntersections(wireLineData1, wireLineData2):
 
     intersections = []
-    for y, lox, hix in hLines:
-        for x, loy, hiy in vLines:
-            if isBetween(y, loy, hiy) and isBetween(x, lox, hix):
-                intersections.append((x,y))
+
+    for orientation1, fixedKoord1, lo1, hi1 in wireLineData1:
+        for orientation2, fixedKoord2, lo2, hi2 in wireLineData2:
+            if orientation2 ==orientation1:
+                continue
+            if isBetween(fixedKoord1, lo2, hi2) and isBetween(fixedKoord2, lo1, hi1):
+                if orientation1 == 'v':
+                    intersections.append((fixedKoord1, fixedKoord2))
+                else:
+                    intersections.append((fixedKoord2, fixedKoord1))
+            
+            
+
     return intersections
 
 def doDaThang(file):
 
     wires = getMoveData(file)
 
-    w1EdgeData = getHorAndVertLineData(wires[0])
-    w2EdgeData = getHorAndVertLineData(wires[1])
+    horVertLineData1 = getHorAndVertLineData(wires[0])
+    horVertLineData2 = getHorAndVertLineData(wires[1])
 
-    # horLinesW1 = w1EdgeData[0]
-    # verLinesW2 = w2EdgeData[1]
-
-    # horLinesW2 = w2EdgeData[0]
-    # verLinesW1 = w1EdgeData[1]
-
-    intersections = getIntersections(w1EdgeData[0], w2EdgeData[1])
-    intersections.extend(getIntersections(w2EdgeData[0], w1EdgeData[1]))
+    intersections = getIntersections(horVertLineData1, horVertLineData2)
     print(intersections)
 
     manhattanDist = lambda tupel: tupel[0] + tupel[1]
 
     return min(map(manhattanDist, intersections))
 
-doDaThang('03/input.txt')
+doDaThang('03/input-test3.txt')
 
 # (x,y) -> (x+dx, y+dy)
 
