@@ -87,8 +87,8 @@ doDaThang('03/input-test2.txt')
 # horMoves1[(a,r(a,a+b)), (), ()]
 # verMoves2[(a,r(a,a+b)), (), ()]
 # # or better:
-# horMoves1[(a,lo,hi), (a,lo,hi), ()]
-# verMoves2[(a,lo,hi), (a,lo,hi), ()]
+# horMoves1[(y,lox,hix), (a,lo,hi), ()]
+# verMoves2[(x,loy,hiy), (a,lo,hi), ()]
 # #   # crossings where hm1[i][0] in range(hm2[j][1],hm2[j][1]+hm2[j][2])
 
 
