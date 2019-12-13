@@ -1,4 +1,4 @@
-with open('input.txt') as f:
+with open('02/input.txt') as f:
     # read_data = map(int, f.read().split(","))
     read_data = f.read().split(",")
 
@@ -39,22 +39,19 @@ input_options = set()
 #         input_options.add((x, y))
 
 for x in range(99):
-    for y in range(x, 99):
+    for y in range(99):
         input_options.add((x, y))
-
-
-
 
 print(len(input_options))
 
 print(f'input_options: {input_options}')
 
-for input in input_options:
-    foo = list(input)
-    print(f'{input}')
-    print(f'{foo[0]} : {foo[1]}')
-    result = intcode(init_program(program, foo[0], foo[1]), start_index)[0]
+for i in input_options:
+    option = list(i)
+    # print(f'{input}')
+    # print(f'{foo[0]} : {foo[1]}')
+    result = intcode(init_program(program, option[0], option[1]), start_index)[0]
     if result == 19690720:
-        asdf = foo[0] * 100 + foo[1]
-        print(f'result: {asdf}')
-        break
+        solution = option[0] * 100 + option[1]
+        print(f'result: {solution}')
+        # break
